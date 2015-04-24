@@ -30,7 +30,83 @@ namespace DeckOfCards
     //     List<Card> DiscardedCards -- cards that have been played
     class Deck
     {
+        //create a random
+        Random rng = new Random();
+        //set properties
+        public List<Card> DeckOfCards { get; set; }
+        public List<Card> DiscardedCards { get; set; }
+        /// <summary>
+        /// Shuffles deck
+        /// </summary>
+        public void Shuffle()
+        {
+            Random rng = new Random();
+            DeckOfCards.Concat(DiscardedCards);
+            List<Card> tempShuffleList = new List<Card> { };
+            while (DeckOfCards.Count() > 0)
+            {
+                Card currentCard = DeckOfCards[rng.Next(0,DeckOfCards.Count())];
+                tempShuffleList.Add(currentCard);
+                DeckOfCards.Remove(currentCard);
+            }
+            DeckOfCards = tempShuffleList;
+        }
+        /// <summary>
+        /// deals number of cards
+        /// </summary>
+        /// <param name="numberOfCards">number of cards</param>
+        /// <returns></returns>
+        public List<Card> Deal(int numberOfCards)
+        {
+            List<Card> tempDeal = new List<Card> { };
+            for (int i = 0; i < numberOfCards; i++)
+            {
+                tempDeal.Add(DeckOfCards[i]);
+                DeckOfCards.Remove(DeckOfCards[i]);
+                
+            }
+            return tempDeal;
+        }
+        /// <summary>
+        /// discard one card
+        /// </summary>
+        /// <param name="card">a card</param>
+        /// <returns></returns>
+        public List<Card> Discard(Card card)
+        {
+             DiscardedCards.Add(card);
+             return DiscardedCards;
+        }
+        /// <summary>
+        /// discards multiple cards
+        /// </summary>
+        /// <param name="cards">liist of cards</param>
+        /// <returns></returns>
+        public List<Card> Discard(List<Card> cards)
+        {
+            foreach (Card card in cards )
+            {
+                DiscardedCards.Add(card);
+            }
+            return DiscardedCards;
+        }
 
+        public Deck()
+        {
+            this.DeckOfCards = new List<Card> { };
+            //set discarded to empty
+            this.DiscardedCards = new List<Card> { }; 
+            //set standard 
+            for (int i = 2; i < 15; i++)
+            {
+                for (int x = 1; x < 5; x++)
+                {
+                    Card newCard = new Card(i,x);
+                    DeckOfCards.Add(newCard);
+                    
+                } 
+            }
+        }
     }
 
     
@@ -39,6 +115,51 @@ namespace DeckOfCards
     //     These enumerations should be "Suit" and "Rank"
     class Card
     {
+        //make properties
+        public Rank CardRank { get; set;}
+        public SuitType Suit { get; set; }
 
+
+
+
+        
+        //make list of rank
+        public enum Rank
+        {
+            Two = 2,
+            Three,
+            Four,
+            Five,
+            Six,
+            Seven,
+            Eight,
+            Nine,
+            Ten,
+            Jack,
+            Queen,
+            King,
+            Ace
+        }
+       //make suits
+        public enum SuitType
+        {
+            Club = 1,
+            Diamond,
+            Heart,
+            Spade
+        }
+        public Card()
+        {
+
+        }
+        public Card(int rank, int suit)
+        {
+            this.CardRank = (Rank) rank;
+            this.Suit = (SuitType) suit;
+        }
+        public override string ToString()
+        {
+            return string.Format("{0} of {1}",CardRank ,Suit);
+        }
     }
 }
